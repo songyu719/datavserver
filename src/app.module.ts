@@ -1,11 +1,21 @@
-import { Module } from '@nestjs/common';
+import {  Module } from '@nestjs/common';
 import { AppController } from './app.controller';
 import { AppService } from './app.service';
-import { DataviewModule } from './dataview/dataview.module';
-
+import DbModule  from './module/db/db.module';
+import { GraphQLModule } from "@nestjs/graphql"
+import { DataViewResolver } from './graphql/data-view/data-view.resolver';
 @Module({
-  imports: [DataviewModule],
+  imports: [
+    DbModule.register(),
+    GraphQLModule.forRoot({
+      autoSchemaFile:"./schema.gql",
+      debug:true,
+      playground:true
+    })
+  ],
   controllers: [AppController],
-  providers: [AppService],
+  providers: [AppService, DataViewResolver],
 })
-export class AppModule {}
+export class AppModule {
+
+}
